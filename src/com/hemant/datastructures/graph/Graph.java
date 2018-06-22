@@ -17,6 +17,7 @@ public class Graph {
 	
 	public void addEdge(int fromVertex, int toVertex) {
 		this.adjacencyList[fromVertex].add(toVertex);
+		this.adjacencyList[toVertex].add(fromVertex);
 	}
 
 	public int getNumberOfVertices() {

@@ -1,11 +1,14 @@
 package com.hemant.algorithms.graph;
 
+import java.util.function.Consumer;
+
 import com.hemant.datastructures.graph.Graph;
 
 public abstract class DFS {
 	protected Graph graph;
 	private boolean gvisited[];
 	protected int vertexComponent[];
+	protected boolean isCyclic;
 
 	public DFS(Graph graph) {
 		this.graph = graph;
@@ -39,10 +42,23 @@ public abstract class DFS {
 		return count;
 	}
 	
-	public int[] findVertexComponents() {
+	public int[] findVertexComponents(int s, Consumer<Integer> consumer) {
+		consumer.accept(s);
 		return this.vertexComponent;
 	}
 	
+	public Consumer<Integer> findDistinctComponents() {
+		return (s) -> {
+			int count = 1;		
+			markVerticesWithComponentNumber(count, execute(s));
+			for (int i=1; i<gvisited.length; i++) {
+				if (gvisited[i] == false) {
+					markVerticesWithComponentNumber(++count, execute(i));
+				} 
+			}
+		};
+	}
+
 	public void markVerticesWithComponentNumber(int count, boolean[] visited) {
 		for (int i=1; i<visited.length; i++) {
 			if (visited[i] == true) {
@@ -58,5 +74,9 @@ public abstract class DFS {
 				gvisited[i] = true;
 			}
 		}
+	}
+	
+	public boolean isGraphCyclic() {
+		return this.isCyclic;
 	}
 }
